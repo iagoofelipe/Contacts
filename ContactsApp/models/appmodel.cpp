@@ -10,7 +10,11 @@ AppModel::AppModel(QObject *parent)
 ContactsListModel* AppModel::getContactsListModel() { return contactsListModel; }
 
 QFuture<bool> AppModel::initialize() {
-    return QtConcurrent::run([] {
-        return true;
-    });
+    return QtConcurrent::run([&]{ return _initialize(); } );
+}
+
+bool AppModel::_initialize() {
+
+
+    return true;
 }

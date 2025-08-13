@@ -18,6 +18,8 @@ public:
 private:
     ContactsListModel *contactsListModel;
 
+    bool _initialize();
+
 };
 
 #endif // APPMODEL_H
