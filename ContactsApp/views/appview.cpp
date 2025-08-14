@@ -8,7 +8,7 @@ AppView::AppView(AppModel *model, QObject *parent)
     , contactsForm(nullptr)
     , loadingForm(nullptr)
 {
-    window->setMinimumSize(1000, 600);
+    window->setMinimumSize(480, 560);
 }
 
 void AppView::setCurrentForm(Forms op)

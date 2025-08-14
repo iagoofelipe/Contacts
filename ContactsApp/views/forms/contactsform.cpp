@@ -1,6 +1,8 @@
 #include "contactsform.h"
 #include "ui_contactsform.h"
 
+#include <QMessageBox>
+
 ContactsForm::ContactsForm(AppModel *model, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ContactsForm)
@@ -17,7 +19,7 @@ ContactsForm::ContactsForm(AppModel *model, QWidget *parent)
     connect(ui->btnSearch, &QPushButton::clicked, this, &ContactsForm::on_btnSearch_clicked);
     connect(ui->btnEdit, &QPushButton::clicked, this, &ContactsForm::on_btnEdit_clicked);
     connect(ui->btnDelete, &QPushButton::clicked, this, &ContactsForm::on_btnDelete_clicked);
-    connect(ui->btnUnselect, &QPushButton::clicked, this, &ContactsForm::clearSelections);
+    connect(ui->btnUnselect, &QPushButton::clicked, this, [&] { clearSelections(); });
     connect(ui->btnDetails, &QPushButton::clicked, this, &ContactsForm::on_btnDetails_clicked);
     connect(ui->lineSearch, &QLineEdit::returnPressed, ui->btnSearch, &QPushButton::click);
 
@@ -54,13 +56,13 @@ void ContactsForm::setContacts(const ContactMap& contacts)
         spacer = nullptr;
     }
 
+    clearSelections(false);
+
     if(contacts.empty())
         return;
 
     QMap<QChar, QList<int>> idsByLetter;
     model->getLetters(contacts, idsByLetter);
-
-    // int index = 0;
 
     QMapIterator<QChar, QList<int>> it(idsByLetter);
 
@@ -69,14 +71,19 @@ void ContactsForm::setContacts(const ContactMap& contacts)
         auto letter = it.key();
         auto ids = it.value();
 
-        ;
         auto label = new QLabel(letter, ui->widContent);
+        auto line = new QFrame(ui->widContent);
         QFont font;
 
         font.setPointSize(15);
         label->setFont(font);
+        line->setFrameShape(QFrame::HLine);
+        line->setFrameShadow(QFrame::Sunken);
+
         layout->addWidget(label);
+        layout->addWidget(line);
         widgets.append(label);
+        widgets.append(line);
 
         for(int id : ids) {
             Contact contact = contacts[id];
@@ -90,41 +97,17 @@ void ContactsForm::setContacts(const ContactMap& contacts)
         }
     }
 
-
-    // for(const auto& letter : std::as_const(letters)) {
-    //     auto label = new QLabel(letter, ui->widContent);
-    //     QFont font;
-
-    //     font.setPointSize(15);
-    //     label->setFont(font);
-    //     layout->addWidget(label);
-    //     widgets.append(label);
-
-    //     for(; index < count; index++) {
-    //         const Contact *contact = &list[index];
-
-    //         if(!contact->name.startsWith(letter))
-    //             break;
-
-    //         auto check = new QCheckBox(contact->name, ui->widContent);
-    //         check->setProperty("id", contact->id);
-    //         connect(check, &QCheckBox::checkStateChanged, this, &ContactsForm::on_checkBox_checkStateChanged);
-
-    //         layout->addWidget(check);
-    //         widgets.append(check);
-    //     }
-    // }
-
     layout->addItem(spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
 }
 
-void ContactsForm::clearSelections()
+void ContactsForm::clearSelections(bool uncheck)
 {
-    for(const auto& check : std::as_const(selectedWidgets)) {
-        check->blockSignals(true);
-        check->setChecked(false);
-        check->blockSignals(false);
-    }
+    if(uncheck)
+        for(const auto& check : std::as_const(selectedWidgets)) {
+            check->blockSignals(true);
+            check->setChecked(false);
+            check->blockSignals(false);
+        }
 
     selectedWidgets.clear();
     selectedIds.clear();
@@ -153,7 +136,15 @@ void ContactsForm::on_btnEdit_clicked() {
 }
 
 void ContactsForm::on_btnDelete_clicked() {
-    if(selectedIds.empty())
+    size_t size = selectedIds.size();
+    QString msg = "Would you like to delete ";
+    msg += std::to_string(size);
+    msg += size == 1? "contact?" : "contacts?";
+
+    QMessageBox *box = new QMessageBox(QMessageBox::Icon::Question, "Confirm delete", msg, QMessageBox::Ok | QMessageBox::Cancel, this);
+    ;
+
+    if(QMessageBox::Cancel == box->exec())
         return;
 
     emit deleteRequired({selectedIds.begin(), selectedIds.end()});
@@ -163,7 +154,7 @@ void ContactsForm::on_checkBox_checkStateChanged(Qt::CheckState state) {
     QCheckBox* obj = qobject_cast<QCheckBox*>(sender());
     int id = obj->property("id").toInt();
 
-    if(Qt::CheckState::Checked == state) {
+    if(state == Qt::CheckState::Checked) {
         selectedIds.insert(id);
         selectedWidgets.insert(obj);
 

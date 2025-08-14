@@ -22,7 +22,7 @@ public:
     ~ContactsForm();
 
     void setContacts(const ContactMap& contacts);
-    void clearSelections();
+    void clearSelections(bool uncheck = true);
 
 signals:
     void newRequired();
