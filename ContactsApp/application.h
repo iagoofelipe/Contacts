@@ -1,16 +1,14 @@
-#ifndef APP_H
-#define APP_H
+#ifndef APPLICATION_H
+#define APPLICATION_H
 
-#include "models/appmodel.h"
-#include "views/appview.h"
 #include "controllers/appcontroller.h"
 
 #include <QApplication>
 
-class App : public QApplication
+class Application : public QApplication
 {
 public:
-    explicit App(int argc, char *argv[]);
+    Application(int argc, char** argv);
 
     int exec();
 
@@ -20,4 +18,4 @@ private:
     AppController *controller;
 };
 
-#endif // APP_H
+#endif // APPLICATION_H

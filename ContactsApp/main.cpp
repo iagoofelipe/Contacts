@@ -1,8 +1,7 @@
-#include "app.h"
+#include "application.h"
 
 int main(int argc, char *argv[])
 {
-    App a(argc, argv);
-
+    Application a(argc, argv);
     return a.exec();
 }

@@ -3,18 +3,17 @@
 
 #include <QString>
 #include <QList>
-
-enum HomeMenuOptions {
-    Contacts, NewContact
-};
+#include <QMap>
 
 struct Contact {
     int id;
     QString name;
-    QString number;
+    QString phone;
     QString email;
 };
 
-typedef QList<Contact> ContactsList;
+// typedef QList<Contact> ContactList;
+
+typedef QMap<int, Contact> ContactMap;
 
 #endif // CONSTS_H

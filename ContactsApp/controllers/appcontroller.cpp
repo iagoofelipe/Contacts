@@ -1,25 +1,25 @@
 #include "appcontroller.h"
-#include "../models/consts.h"
 
 AppController::AppController(AppModel *model, AppView *view, QObject *parent)
     : QObject{parent}
     , model(model)
     , view(view)
-{}
+    , managementController(new ContactManagementController(model, view, this))
+    , contactsController(new ContactsController(model, view, this))
+{
+    connect(this, SIGNAL(initializationFinished()), this, SLOT(on_initializationFinished()));
+}
 
-void AppController::initialize() {
+void AppController::initialize()
+{
     view->initialize();
     model->initialize()
-        .then([&](bool success) {
-            qDebug() << "success" << success;
-
-            if(!success)
-                return;
-
-            auto contactsModel = this->view->getHomeForm()->getContactsListForm()->getModel();
-            contactsModel->setContacts(ContactsList {
-                { 0, "Iago Carvalho", "981409613", "iago@email.com" },
-                { 1, "José Carvalho", "123456789", "jose@email.com" },
-            });
+        .then([&] {
+            emit initializationFinished();
         });
+}
+
+void AppController::on_initializationFinished()
+{
+    view->setCurrentForm(AppView::Forms::Contacts);
 }

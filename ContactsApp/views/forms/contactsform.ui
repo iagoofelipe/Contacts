@@ -1,39 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ContactsListForm</class>
- <widget class="QWidget" name="ContactsListForm">
+ <class>ContactsForm</class>
+ <widget class="QWidget" name="ContactsForm">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
-    <height>608</height>
+    <width>938</width>
+    <height>525</height>
    </rect>
   </property>
   <property name="font">
    <font>
-    <pointsize>12</pointsize>
+    <pointsize>11</pointsize>
    </font>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QPushButton { padding: 5; }</string>
+   <string notr="true">QPushButton { padding: 5; background-color: transparent; }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
    <item>
     <widget class="QWidget" name="widget_2" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -52,7 +40,7 @@
       <item>
        <widget class="QLineEdit" name="lineSearch">
         <property name="styleSheet">
-         <string notr="true">padding: 5;</string>
+         <string notr="true">padding: 7;</string>
         </property>
         <property name="placeholderText">
          <string>Type a name to search...</string>
@@ -61,14 +49,20 @@
       </item>
       <item>
        <widget class="QPushButton" name="btnSearch">
+        <property name="text">
+         <string/>
+        </property>
         <property name="icon">
          <iconset theme="QIcon::ThemeIcon::EditFind"/>
         </property>
         <property name="iconSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>25</width>
+          <height>25</height>
          </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -77,9 +71,6 @@
    </item>
    <item>
     <widget class="QWidget" name="widget" native="true">
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="leftMargin">
        <number>0</number>
@@ -119,9 +110,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="btnNew">
+       <widget class="QPushButton" name="btnAdd">
         <property name="toolTip">
-         <string>add new contact</string>
+         <string>add contact</string>
         </property>
         <property name="text">
          <string/>
@@ -131,9 +122,12 @@
         </property>
         <property name="iconSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>25</width>
+          <height>25</height>
          </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -142,14 +136,61 @@
         <property name="toolTip">
          <string>edit selected contact</string>
         </property>
+        <property name="text">
+         <string/>
+        </property>
         <property name="icon">
          <iconset theme="QIcon::ThemeIcon::MailMessageNew"/>
         </property>
         <property name="iconSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>25</width>
+          <height>25</height>
          </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnUnselect">
+        <property name="toolTip">
+         <string>unselect all contacts</string>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::MediaPlaybackStop"/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btnDetails">
+        <property name="toolTip">
+         <string>contact details</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset theme="QIcon::ThemeIcon::FormatJustifyCenter"/>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>25</width>
+          <height>25</height>
+         </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -158,14 +199,20 @@
         <property name="toolTip">
          <string>delete selected contacts</string>
         </property>
+        <property name="text">
+         <string/>
+        </property>
         <property name="icon">
          <iconset theme="QIcon::ThemeIcon::EditDelete"/>
         </property>
         <property name="iconSize">
          <size>
-          <width>20</width>
-          <height>20</height>
+          <width>25</width>
+          <height>25</height>
          </size>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -174,16 +221,19 @@
    </item>
    <item>
     <widget class="QScrollArea" name="scrollArea">
+     <property name="frameShape">
+      <enum>QFrame::Shape::NoFrame</enum>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
-     <widget class="QWidget" name="widList">
+     <widget class="QWidget" name="widContent">
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>948</width>
-        <height>530</height>
+        <width>920</width>
+        <height>421</height>
        </rect>
       </property>
      </widget>

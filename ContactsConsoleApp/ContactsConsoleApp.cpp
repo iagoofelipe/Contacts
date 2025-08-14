@@ -2,6 +2,7 @@
 #include "Contacts.h"
 
 #include <vector>
+#include <algorithm>
 
 void displayContact(const contacts::Contact* contact)
 {
@@ -15,6 +16,7 @@ void displayContact(const contacts::Contact* contact)
 		<< "<Contact id=" << contact->id
 		<< " name=" << (contact->name ? contact->name : "N/A")
 		<< " phone=" << (contact->phone ? contact->phone : "N/A")
+		<< " email=" << (contact->email ? contact->email : "N/A")
 		<< ">\n";
 }
 
@@ -47,4 +49,16 @@ int main()
 		displayContact(contacts[i]);
 
 	contacts::clear();
+
+
+	std::vector<std::string> names = { "Eve", "Bob", "David", "Charlie", "Alice" };
+
+	for (const auto& name : names)
+		std::cout << name << "\n";
+
+	std::sort(names.begin(), names.end());
+
+	std::cout << "\nSorted names:\n";
+	for (const auto& name : names)
+		std::cout << name << "\n";
 }

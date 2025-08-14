@@ -29,13 +29,14 @@ static T** copyVectorPointerToArray(std::vector<T*>* vec, size_t* size) {
 }
 
 static bool initialized = false;
-static const char* filename = "contacts.csv";
 static std::vector<contacts::Contact*>* contactList;
 static std::map<int, int>* contactIndexById;
 static int nextId = 0;
 
 namespace contacts
 {
+
+	const char* FILENAME = "contacts.csv";
 
 	void initialize() {
 		if(initialized)
@@ -46,7 +47,7 @@ namespace contacts
 		contactIndexById = new std::map<int, int>();
 		nextId = 0;
 
-		std::ifstream file(filename);
+		std::ifstream file(FILENAME);
 		if (!file.is_open()) // No file yet, will create on first add
 			return;
 
@@ -90,7 +91,7 @@ namespace contacts
 
 	Contact* addContact(const Contact& contact)
 	{
-		std::ofstream file(filename, std::ios::app);
+		std::ofstream file(FILENAME, std::ios::app);
 		if (!file.is_open())
 			return nullptr;
 
@@ -98,6 +99,10 @@ namespace contacts
 		Contact *pContact;
 
 		contactList->push_back(pContact = new Contact(contact));
+		// free(contact.name);
+		// free(contact.phone);
+		// free(contact.email);
+
 		pContact->id = id;
 
 		file << id << "," << pContact->name << "," << pContact->phone << "," << pContact->email << std::endl;
@@ -110,16 +115,44 @@ namespace contacts
 
 	Contact* addContactByFields(const char* name, const char* phone, const char* email)
 	{
-		const Contact contact {
-			-1, _strdup(name), _strdup(phone), _strdup(email)
-		};
+		return addContact({ -1, _strdup(name), _strdup(phone), _strdup(email) });
+	}
 
-		return addContact(contact);
+	API Contact* updateContact(const Contact& contact)
+	{
+		if(contactIndexById->count(contact.id) == 0)
+			return nullptr;
+
+		std::ofstream file(FILENAME);
+		if (!file.is_open())
+			return nullptr;
+
+		int index = contactIndexById->at(contact.id);
+		Contact *c;
+
+		freeContact(contactList->at(index));
+		contactList->at(index) = c = new Contact(contact);
+		// free(contact.name);
+		// free(contact.phone);
+		// free(contact.email);
+
+		for (const auto& c : *contactList) {
+			file << c->id << "," << c->name << "," << c->phone << "," << c->email << std::endl;
+		}
+
+		file.close();
+
+		return c;
+	}
+
+	API Contact* updateContactByFields(int id, const char* name, const char* phone, const char* email)
+	{
+		return updateContact({ id, _strdup(name), _strdup(phone), _strdup(email) });
 	}
 
 	void removeContact(int id)
 	{
-		std::ofstream file(filename);
+		std::ofstream file(FILENAME);
 		if (!file.is_open())
 			return;
 
@@ -129,9 +162,31 @@ namespace contacts
 		contactList->erase(contactList->begin() + index);
 		contactIndexById->erase(id);
 
-		for (const auto& contact : *contactList) {
+		for (const auto& contact : *contactList)
 			file << contact->id << "," << contact->name << "," << contact->phone << "," << contact->email << std::endl;
+
+		file.close();
+	}
+
+	void removeContacts(int ids[], size_t size)
+	{
+		std::ofstream file(FILENAME);
+		if (!file.is_open())
+			return;
+
+		for (int i = 0; i < size; i++)
+		{
+			int
+				id = ids[i],
+				index = contactIndexById->at(id);
+
+			freeContact(contactList->at(index));
+			contactList->erase(contactList->begin() + index);
+			contactIndexById->erase(id);
 		}
+
+		for (const auto& contact : *contactList)
+			file << contact->id << "," << contact->name << "," << contact->phone << "," << contact->email << std::endl;
 
 		file.close();
 	}
@@ -171,9 +226,8 @@ namespace contacts
 
 	void sortContactsByName()
 	{
-		std::sort(contactList->begin(), contactList->end(),
-			[](const Contact* a, const Contact* b) {
-				return a->name < b->name;
+		std::sort(contactList->begin(), contactList->end(), [](const Contact* a, const Contact* b) {
+			return std::string(a->name) < std::string(b->name);
 			});
 
 		contactIndexById->clear();

@@ -1,7 +1,7 @@
 #ifndef APPMODEL_H
 #define APPMODEL_H
 
-#include "contactslistmodel.h"
+#include "consts.h"
 
 #include <QObject>
 #include <QFuture>
@@ -12,14 +12,27 @@ class AppModel : public QObject
 public:
     explicit AppModel(QObject *parent = nullptr);
 
-    ContactsListModel* getContactsListModel();
-    QFuture<bool> initialize();
+    QFuture<void> initialize();
+    void close();
+
+    const ContactMap& getContacts();
+    const Contact& getContactById(int id);
+    void getFiltered(const QString& name, ContactMap& out);
+    void getLetters(const ContactMap& values, QMap<QChar, QList<int>>& out);
+
+    void addContact(const Contact& contact);
+    void updateContact(const Contact& contact);
+    void removeContact(int id);
+    void removeContacts(const QList<int>& ids);
 
 private:
-    ContactsListModel *contactsListModel;
+    ContactMap contacts;
 
-    bool _initialize();
+    void _initialize();
+    void readContactsFromDll(bool dispatch = false);
 
+signals:
+    void contactsChanged(const ContactMap& contacts);
 };
 
 #endif // APPMODEL_H
