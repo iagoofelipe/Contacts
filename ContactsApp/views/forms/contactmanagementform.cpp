@@ -1,6 +1,8 @@
 #include "contactmanagementform.h"
 #include "ui_contactmanagementform.h"
 
+#include <QMessageBox>
+
 QString ContactManagementForm::TitleModeNew = "Add Contact";
 QString ContactManagementForm::TitleModeEdit = "Edit Contact";
 QString ContactManagementForm::TitleModeDisplay = "Contact Detail";
@@ -86,12 +88,24 @@ void ContactManagementForm::clear()
 
 void ContactManagementForm::on_btnSave_clicked()
 {
-    emit saveRequired({
-        contactId,
-        ui->lineName->text(),
-        ui->linePhone->text(),
-        ui->lineEmail->text(),
-    });
+    const QString
+        name = ui->lineName->text(),
+        phone = ui->linePhone->text(),
+        email = ui->lineEmail->text();
+
+    if(name.contains(",") || phone.contains(",") || email.contains(",")) {
+        auto box = new QMessageBox(QMessageBox::Icon::Warning, "Invalid Entry", "Entry must not contain \",\"", QMessageBox::NoButton, this);
+        box->exec();
+        return;
+    }
+
+    if(name.isEmpty()) {
+        auto box = new QMessageBox(QMessageBox::Icon::Warning, "Invalid Entry", "Name must not be empty", QMessageBox::NoButton, this);
+        box->exec();
+        return;
+    }
+
+    emit saveRequired({ contactId, name, phone, email });
 
     contactId = -1;
     clear();

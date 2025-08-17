@@ -139,7 +139,7 @@ void ContactsForm::on_btnDelete_clicked() {
     size_t size = selectedIds.size();
     QString msg = "Would you like to delete ";
     msg += std::to_string(size);
-    msg += size == 1? "contact?" : "contacts?";
+    msg += size == 1? " contact?" : " contacts?";
 
     QMessageBox *box = new QMessageBox(QMessageBox::Icon::Question, "Confirm delete", msg, QMessageBox::Ok | QMessageBox::Cancel, this);
     ;
