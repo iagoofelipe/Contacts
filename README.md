@@ -4,12 +4,24 @@ Este projeto é de uma aplicação desktop de agenda telefônica, construída ut
 > Este documento não possui uma descrição técnica detalhada do projeto, apenas o apresentando e descrevendo a lógica geral e seu propósito.
 
 # Tópicos
+- [Descrição](#descrição)
+- [Uso](#uso)
+- [Aplicação Gráfica](#aplicação-gráfica)
+    - [Fluxo da Aplicação](#fluxo-da-aplicação)
+    - [Interfaces](#interfaces)
+- [Aplicação de Console](#aplicação-de-console)
+- [DLL](#dll)
 
 # Descrição
 A fim de explorar os recursos da linguagem C++ e utilizar conceitos mais amplos, como o uso de bibliotecas dinâmicas, a aplicação foi divida em três partes:
 - [Aplicação Gráfica](#aplicação-gráfica)
 - [Aplicação de Console](#aplicação-de-console)
 - [DLL](#dll)
+
+# Uso
+Para a utilização da aplicação, é necessário o [Visual Studio](https://visualstudio.microsoft.com/pt-br/) para a compilação da [DLL](#dll) e da [Aplicação de Console](#aplicação-de-console) e para a [Aplicação Gráfica](#aplicação-gráfica) é necessário o [Qt Creator](https://www.qt.io/product/development-tools).
+
+Para testes, a aplicação foi compilada e o arquivo `.zip` está disponível em [Contacts_1.0.0.zip](tests/Contacts_1.0.0.zip). Basta descompilar e executar o arquivo `ContactsApp.exe`.
 
 # Aplicação Gráfica
 A aplicação gráfica foi construída utilizando Qt Widgets em conjunto com a arquitetura MVC.
